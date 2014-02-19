@@ -23,16 +23,16 @@ architecture behave of test_sampling is
     --"11011111", "01001101", "10111000", "01000001"
   --);
   constant biases : weight_array_t(1 to num_samplers) := (
-    to_signed(0, weight_t'length),
-    to_signed(0, weight_t'length),
-    to_signed(0, weight_t'length),
-    to_signed(0, weight_t'length)
+    to_signed(-2, weight_t'length),
+    to_signed(-1, weight_t'length),
+    to_signed(-4, weight_t'length),
+    to_signed(-3, weight_t'length)
   );
   constant weights : weight_array2_t(1 to num_samplers, 1 to num_samplers) := (
-    ( "0000", "0001", "0001", "0001"),
-    ( "0001", "0000", "0001", "0001"),
-    ( "0001", "0001", "0000", "0001"),
-    ( "0001", "0001", "0001", "0000")
+    ( "0000", "0101", "0010", "1110"),
+    ( "0101", "0000", "0010", "1110"),
+    ( "0010", "0010", "0000", "0001"),
+    ( "1110", "1110", "0001", "0000")
   );
 
   signal clk, reset : std_ulogic;
