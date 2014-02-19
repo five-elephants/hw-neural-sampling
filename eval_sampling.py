@@ -8,13 +8,13 @@ def string_to_bool(s):
     else:
         return False
 
-def string_to_fixed(s, width=16):
+def string_to_fixed(s, width=16, fraction=8):
     uns = int(s, 16)
     sign = bool(uns & (1 << (width-1)))
     if sign:
-        return uns - 2**width
+        return float(uns - 2**width) / 2.0**fraction
     else:
-        return uns
+        return float(uns) / 2.0**fraction
 
 def read_trace(filename, mem_width=16):
     states = []

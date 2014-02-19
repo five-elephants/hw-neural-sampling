@@ -17,23 +17,17 @@ architecture behave of test_sampling is
   constant num_rngs_per_sampler : integer := 4;
   constant tau : integer := 20;
 
-  --constant seeds : lfsr_state_array_t(1 to num_samplers*num_rngs_per_sampler) := (
-    --"11111111", "00001111", "11110100", "00001001",
-    --"11111111", "00001111", "11110100", "00001001",
-    --"11011111", "01001101", "10111000", "01000001",
-    --"11011111", "01001101", "10111000", "01000001"
-  --);
   constant biases : weight_array_t(1 to num_samplers) := (
-    to_signed(-2, weight_t'length),
-    to_signed(-1, weight_t'length),
-    to_signed(-4, weight_t'length),
-    to_signed(-3, weight_t'length)
+    make_fixed(-1.0, 2, 1),
+    make_fixed(-0.5, 2, 1),
+    make_fixed(-2.0, 2, 1),
+    make_fixed(-1.5, 2, 1)
   );
   constant weights : weight_array2_t(1 to num_samplers, 1 to num_samplers) := (
-    ( "0000", "0101", "0010", "1110"),
-    ( "0101", "0000", "0010", "1110"),
-    ( "0010", "0010", "0000", "0001"),
-    ( "1110", "1110", "0001", "0000")
+    (make_fixed(0.0, 2, 1), make_fixed(1.5, 2, 1), make_fixed(1.0, 2, 1), make_fixed(-1.0, 2, 1)),
+    (make_fixed(1.5, 2, 1), make_fixed(0.0, 2, 1), make_fixed(1.0, 2, 1), make_fixed(-1.0, 2, 1)),
+    (make_fixed(1.0, 2, 1), make_fixed(1.0, 2, 1), make_fixed(0.0, 2, 1), make_fixed(0.5, 2, 1)),
+    (make_fixed(-1.0, 2, 1), make_fixed(-1.0, 2, 1), make_fixed(0.5, 2, 1), make_fixed(0.0, 2, 1))
   );
 
   signal clk, reset : std_ulogic;
@@ -90,6 +84,25 @@ begin
     for i in seeds'range loop
       seeds(i) <= std_logic_vector(to_unsigned(i, seeds(i)'length));
     end loop;
+
+    write(l, string'("biases:"));
+    writeline(output, l);
+    for i in biases'range loop
+      hwrite(l, std_logic_vector(biases(i)));
+      writeline(output, l);
+    end loop;
+
+    write(l, string'("weights:"));
+    writeline(output, l);
+    for i in 1 to num_samplers loop
+      for j in 1 to num_samplers loop
+        hwrite(l, std_logic_vector(weights(i,j)));
+        write(l, string'("  "));
+      end loop;
+      writeline(output, l);
+    end loop;
+
+
 
     reset <= '1';
     wait for 100 ns;

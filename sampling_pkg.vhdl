@@ -2,13 +2,17 @@ library ieee;
 
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use ieee.math_real.all;
 
 
 package sampling is
 
   constant weight_width : integer := 4;
+  constant weight_fraction : integer := 1;
   constant membrane_width : integer := 16;
+  constant membrane_fraction : integer := 8;
   constant lfsr_width : integer := 8;
+  constant lfsr_fraction : integer := 6;
 
   subtype lfsr_state_t is std_logic_vector(lfsr_width-1 downto 0);
   subtype membrane_t is signed(membrane_width-1 downto 0);
@@ -35,5 +39,22 @@ package sampling is
     tick,
     evaluate
   );
+
+
+  function make_fixed(number : real; i_width, f_width : natural)
+      return signed;
+
+end sampling;
+
+
+package body sampling is
+
+  function make_fixed(number : real; i_width, f_width : natural)
+      return signed is
+    variable rv : signed(i_width+f_width downto 0);
+  begin
+    rv := to_signed(integer(number * (2.0**f_width) ), i_width+f_width+1);
+    return rv;
+  end make_fixed;
 
 end sampling;

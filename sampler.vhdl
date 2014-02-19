@@ -29,7 +29,7 @@ end sampler;
 
 
 architecture rtl of sampler is
-  constant threshold : membrane_t := to_signed(200, membrane_t'length);
+  constant threshold : membrane_t := make_fixed(1.0, 7, 8);
 
   subtype sum_in_t is 
     signed(integer(ceil(log2(real(num_samplers))))+weight_width-1 downto 0);
@@ -69,7 +69,7 @@ begin
   end generate gen_rngs;
 
   ------------------------------------------------------------
-  process ( rng )
+  sum_rand_off: process ( rng )
     variable acc : membrane_t;
   begin
     acc := to_signed(0, acc'length);
@@ -77,7 +77,7 @@ begin
       acc := acc + rng(i);
     end loop;
 
-    rand_off <= acc;
+    rand_off <= shift_left(acc, membrane_fraction-lfsr_fraction);
   end process;
   ------------------------------------------------------------
 
@@ -91,30 +91,12 @@ begin
       membrane_i <= to_signed(0, membrane'length);
     elsif rising_edge(clk) then
       if phase = propagate then
-        bias_ext := resize(bias, bias_ext'length);
-        sum_in_ext := resize(sum_in, sum_in_ext'length);
+        bias_ext := shift_left(resize(bias, bias_ext'length), membrane_fraction-weight_fraction);
+        sum_in_ext := shift_left(resize(sum_in, sum_in_ext'length), membrane_fraction-weight_fraction);
         membrane_i <= sum_in_ext + bias_ext;
       end if;
     end if;
   end process;
-  ------------------------------------------------------------
-
-
-  ------------------------------------------------------------
-  --state_detect: process ( clk, reset )
-  --begin
-    --if reset = '1' then
-      --state <= '0';
-    --elsif rising_edge(clk) then
-      --if phase = evaluate then
-        --if membrane + rand_off > threshold then
-          --state <= '1';
-        --else
-          --state <= '0';
-        --end if;
-      --end if;
-    --end if;
-  --end process;
   ------------------------------------------------------------
 
 
