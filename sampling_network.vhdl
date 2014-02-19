@@ -9,13 +9,17 @@ use work.sampling.all;
 entity sampling_network is
   generic (
     num_samplers : integer := 1;
-    num_rngs_per_sampler : integer := 4
+    num_rngs_per_sampler : integer := 4;
+    tau : integer := 20
   );
   port (
     clk, reset : in std_ulogic;
+    clock_tick : out std_ulogic;
     state_clamp_mask,
     state_clamp : in state_array_t(1 to num_samplers);
     state : out state_array_t(1 to num_samplers);
+    membranes : out membrane_array_t(1 to num_samplers);
+    fires : out std_ulogic_vector(1 to num_samplers);
     seeds : in lfsr_state_array_t(1 to num_samplers*num_rngs_per_sampler);
     biases : in weight_array_t(1 to num_samplers);
     weights : in weight_array2_t(1 to num_samplers, 1 to num_samplers)
@@ -67,7 +71,8 @@ begin
     sampler: entity work.sampler
     generic map (
       num_rngs => num_rngs_per_sampler,
-      num_samplers => num_samplers 
+      num_samplers => num_samplers,
+      tau => tau
     )
     port map (
       clk => clk,
@@ -76,6 +81,8 @@ begin
       bias => biases(sampler_i),
       sum_in => sum_in,
       state => state_i(sampler_i),
+      membrane => membranes(sampler_i),
+      fire => fires(sampler_i),
       seeds => seeds((sampler_i-1)*num_rngs_per_sampler+1 to sampler_i*num_rngs_per_sampler)
     );
 
@@ -111,9 +118,12 @@ begin
           phase <= propagate;
 
         when propagate =>
-          if prop_ctr = lfsr_width-1 then
-            phase <= evaluate;
+          if prop_ctr = lfsr_width-2 then
+            phase <= tick;
           end if;
+
+        when tick =>
+          phase <= evaluate;
 
         when evaluate =>
           phase <= propagate;
@@ -128,10 +138,14 @@ begin
   begin
     --default assignments
     do_prop_count <= '0';
+    clock_tick <= '0';
 
     case phase is
       when propagate =>
         do_prop_count <= '1';
+
+      when tick =>
+        clock_tick <= '1';
 
       when others =>
     end case;

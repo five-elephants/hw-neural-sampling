@@ -32,6 +32,7 @@ package sampling is
   type phase_t is (
     idle,
     propagate,
+    tick,
     evaluate
   );
 

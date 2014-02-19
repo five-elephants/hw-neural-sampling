@@ -11,7 +11,8 @@ entity sampler is
   generic (
     num_rngs : integer := 4;
     num_samplers : integer := 8;
-    lfsr_polynomial : lfsr_state_t := "10111000"
+    lfsr_polynomial : lfsr_state_t := "10111000";
+    tau : integer := 20
   );
 
   port (
@@ -20,13 +21,15 @@ entity sampler is
     bias : in weight_t;
     sum_in : in signed(integer(ceil(log2(real(num_samplers))))+weight_width-1 downto 0);
     state : out std_ulogic;
+    membrane : out membrane_t;
+    fire : out std_ulogic;
     seeds : in lfsr_state_array_t(1 to num_rngs)
   );
 end sampler;
 
 
 architecture rtl of sampler is
-  constant threshold : membrane_t := to_signed(100, membrane_t'length);
+  constant threshold : membrane_t := to_signed(200, membrane_t'length);
 
   subtype sum_in_t is 
     signed(integer(ceil(log2(real(num_samplers))))+weight_width-1 downto 0);
@@ -34,11 +37,15 @@ architecture rtl of sampler is
   type state_number_array_t is array(1 to num_rngs) of
       membrane_t;
 
+  subtype zeta_t is integer range 0 to tau;
+
   signal rng : state_number_array_t;
-  signal membrane : membrane_t;
+  signal membrane_i : membrane_t;
   signal rand_off : membrane_t;
+  signal zeta : zeta_t;
 begin
 
+  membrane <= membrane_i;
   
   gen_rngs: for rng_i in 1 to num_rngs generate 
     signal rand_out : lfsr_state_t;
@@ -81,12 +88,12 @@ begin
     variable bias_ext : membrane_t;
   begin
     if reset = '1' then
-      membrane <= to_signed(0, membrane'length);
+      membrane_i <= to_signed(0, membrane'length);
     elsif rising_edge(clk) then
       if phase = propagate then
         bias_ext := resize(bias, bias_ext'length);
         sum_in_ext := resize(sum_in, sum_in_ext'length);
-        membrane <= sum_in_ext + bias_ext;
+        membrane_i <= sum_in_ext + bias_ext;
       end if;
     end if;
   end process;
@@ -94,22 +101,74 @@ begin
 
 
   ------------------------------------------------------------
-  state_detect: process ( clk, reset )
+  --state_detect: process ( clk, reset )
+  --begin
+    --if reset = '1' then
+      --state <= '0';
+    --elsif rising_edge(clk) then
+      --if phase = evaluate then
+        --if membrane + rand_off > threshold then
+          --state <= '1';
+        --else
+          --state <= '0';
+        --end if;
+      --end if;
+    --end if;
+  --end process;
+  ------------------------------------------------------------
+
+
+  ------------------------------------------------------------
+  refractory_fsm: process ( clk, reset )
+    variable over_thresh : boolean;
   begin
     if reset = '1' then
-      state <= '0';
+      zeta <= 0;
+      fire <= '0';
     elsif rising_edge(clk) then
+
       if phase = evaluate then
-        if membrane + rand_off > threshold then
-          state <= '1';
-        else
-          state <= '0';
-        end if;
+        over_thresh := membrane_i + rand_off > threshold;
+        fire <= '0';
+
+        case zeta is
+          when 1 =>
+            if over_thresh then
+              zeta <= tau;
+              fire <= '1';
+            else
+              zeta <= 0;
+            end if;
+
+          when 0 =>
+            if over_thresh then
+              zeta <= tau;
+              fire <= '1';
+            end if;
+
+          when others =>
+            zeta <= zeta - 1;
+        end case;
       end if;
+
     end if;
   end process;
   ------------------------------------------------------------
+
+
+  ------------------------------------------------------------
+  refractory_fsm_output: process ( zeta )
+  begin
+    if zeta > 0 then
+      state <= '1';
+    else
+      state <= '0';
+    end if;
+  end process;
+  ------------------------------------------------------------
+  
 
 end rtl;
 
     
+-- vim: set et fenc=utf-8 ff=unix sts=0 sw=2 ts=2 : --
