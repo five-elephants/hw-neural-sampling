@@ -15,38 +15,72 @@ entity sampling_network is
     clk, reset : in std_ulogic;
     state_clamp_mask,
     state_clamp : in state_array_t(1 to num_samplers);
-    state : out state_array_t(1 to num_samplers)
+    state : out state_array_t(1 to num_samplers);
+    seeds : in lfsr_state_array_t(1 to num_samplers*num_rngs_per_sampler);
+    biases : in weight_array_t(1 to num_samplers);
+    weights : in weight_array2_t(1 to num_samplers, 1 to num_samplers)
   );
 end sampling_network;
 
 
 architecture rtl of sampling_network is
-  constant fanin : integer := num_samplers -1;
-
   subtype sum_in_t is 
-    signed(integer(ceil(log2(real(fanin))))+weight_width-1 downto 0);
+    signed(integer(ceil(log2(real(num_samplers))))+weight_width-1 downto 0);
 
   signal phase : phase_t;
   signal do_prop_count : std_ulogic;
   signal prop_ctr : integer range 0 to lfsr_width-1;
+  signal state_i : state_array_t(1 to num_samplers);
 begin
 
-  ------------------------------------------------------------
-  sampler: entity work.sampler
-  generic map (
-    num_rngs => num_rngs_per_sampler,
-    fanin => fanin
-  )
-  port map (
-    clk => clk,
-    reset => reset,
-    phase => phase,
-    bias => to_signed(0, weight_t'length),
-    sum_in => to_signed(0, sum_in_t'length),
-    state => state(1)
-  );
-  ------------------------------------------------------------
 
+  state <= state_i;
+
+  ------------------------------------------------------------
+  gen_samplers: for sampler_i in 1 to num_samplers generate
+    signal sum_in : sum_in_t;
+    signal weight_row : weight_array_t(1 to num_samplers);
+  begin
+
+    process ( weights )
+    begin
+      for i in 1 to num_samplers loop
+        weight_row(i) <= weights(sampler_i, i);
+      end loop;
+    end process;
+
+
+    summation: entity work.input_sum
+    generic map (
+      num_samplers => num_samplers 
+    )
+    port map (
+      clk => clk,
+      reset => reset,
+      phase => phase,
+      state => state_i,
+      weights => weight_row,
+      sum => sum_in
+    );
+
+
+    sampler: entity work.sampler
+    generic map (
+      num_rngs => num_rngs_per_sampler,
+      num_samplers => num_samplers 
+    )
+    port map (
+      clk => clk,
+      reset => reset,
+      phase => phase,
+      bias => biases(sampler_i),
+      sum_in => sum_in,
+      state => state_i(sampler_i),
+      seeds => seeds((sampler_i-1)*num_rngs_per_sampler+1 to sampler_i*num_rngs_per_sampler)
+    );
+
+  end generate gen_samplers;
+  ------------------------------------------------------------
 
   ------------------------------------------------------------
   count_propagation: process ( clk, reset )

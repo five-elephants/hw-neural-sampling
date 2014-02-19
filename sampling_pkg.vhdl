@@ -17,6 +17,15 @@ package sampling is
   type lfsr_state_array_t is array(positive range <>) of
     lfsr_state_t;
 
+  type membrane_array_t is array(positive range <>) of
+    membrane_t;
+
+  type weight_array_t is array(positive range <>) of
+    weight_t;
+
+  type weight_array2_t is array(positive range <>, positive range <>) of
+    weight_t;
+
   type state_array_t is array(positive range <>) of
     std_ulogic;
 

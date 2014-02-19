@@ -7,6 +7,7 @@ SOURCE=\
 			 sampling_pkg.vhdl \
 			 lfsr.vhdl \
 			 test_lfsr.vhdl \
+			 input_sum.vhdl \
 			 sampler.vhdl \
 			 sampling_network.vhdl \
 			 test_sampling.vhdl
