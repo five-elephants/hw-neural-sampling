@@ -11,7 +11,7 @@ entity sampler is
   generic (
     num_rngs : integer := 4;
     num_samplers : integer := 8;
-    lfsr_polynomial : lfsr_state_t := "10111000";
+    lfsr_polynomial : lfsr_state_t;
     tau : integer := 20
   );
 
@@ -29,7 +29,7 @@ end sampler;
 
 
 architecture rtl of sampler is
-  constant threshold : membrane_t := make_fixed(1.0, 7, 8);
+  constant threshold : membrane_t := make_fixed(1.5, 7, 8);
 
   subtype sum_in_t is 
     signed(integer(ceil(log2(real(num_samplers))))+weight_width-1 downto 0);

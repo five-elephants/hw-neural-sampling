@@ -72,7 +72,8 @@ begin
     generic map (
       num_rngs => num_rngs_per_sampler,
       num_samplers => num_samplers,
-      tau => tau
+      tau => tau,
+      lfsr_polynomial => lfsr_polynomial
     )
     port map (
       clk => clk,

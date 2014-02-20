@@ -11,7 +11,8 @@ package sampling is
   constant weight_fraction : integer := 1;
   constant membrane_width : integer := 16;
   constant membrane_fraction : integer := 8;
-  constant lfsr_width : integer := 8;
+  constant lfsr_width : integer := 16;
+  constant lfsr_use_width : integer := 8;
   constant lfsr_fraction : integer := 6;
 
   subtype lfsr_state_t is std_logic_vector(lfsr_width-1 downto 0);
@@ -39,6 +40,14 @@ package sampling is
     tick,
     evaluate
   );
+
+
+
+  -- 8bit full polynomial
+  --constant lfsr_polynomial : lfsr_state_t := "10111000";
+
+  -- 16bit full polynomial
+  constant lfsr_polynomial : lfsr_state_t := "1011010000000000";
 
 
   function make_fixed(number : real; i_width, f_width : natural)
