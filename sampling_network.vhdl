@@ -10,11 +10,13 @@ entity sampling_network is
   generic (
     num_samplers : integer := 1;
     num_rngs_per_sampler : integer := 4;
-    tau : integer := 20
+    tau : integer := 20;
+    threshold : membrane_t
   );
   port (
     clk, reset : in std_ulogic;
     clock_tick : out std_ulogic;
+    systime : out systime_t;
     state_clamp_mask,
     state_clamp : in state_array_t(1 to num_samplers);
     state : out state_array_t(1 to num_samplers);
@@ -35,10 +37,12 @@ architecture rtl of sampling_network is
   signal do_prop_count : std_ulogic;
   signal prop_ctr : integer range 0 to lfsr_width-1;
   signal state_i : state_array_t(1 to num_samplers);
+  signal systime_i : systime_t;
 begin
 
 
   state <= state_i;
+  systime <= systime_i;
 
   ------------------------------------------------------------
   gen_samplers: for sampler_i in 1 to num_samplers generate
@@ -73,6 +77,7 @@ begin
       num_rngs => num_rngs_per_sampler,
       num_samplers => num_samplers,
       tau => tau,
+      threshold => threshold,
       lfsr_polynomial => lfsr_polynomial
     )
     port map (
@@ -150,6 +155,20 @@ begin
 
       when others =>
     end case;
+  end process;
+  ------------------------------------------------------------
+
+
+  ------------------------------------------------------------
+  systime_counter: process ( clk, reset )
+  begin
+    if reset = '1' then
+      systime_i <= to_unsigned(0, systime_i'length);
+    elsif rising_edge(clk) then
+      if phase = tick then
+        systime_i <= systime_i + to_unsigned(1, systime_i'length);
+      end if;
+    end if;
   end process;
   ------------------------------------------------------------
 

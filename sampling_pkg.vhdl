@@ -10,11 +10,12 @@ package sampling is
   constant weight_width : integer := 4;
   constant weight_fraction : integer := 1;
   constant membrane_width : integer := 16;
-  constant membrane_fraction : integer := 8;
+  constant membrane_fraction : integer := 10;
   constant lfsr_width : integer := 16;
-  constant lfsr_use_width : integer := 8;
-  constant lfsr_fraction : integer := 6;
+  constant lfsr_use_width : integer := 12;
+  constant lfsr_fraction : integer := 10;
 
+  subtype systime_t is unsigned(63 downto 0);
   subtype lfsr_state_t is std_logic_vector(lfsr_width-1 downto 0);
   subtype membrane_t is signed(membrane_width-1 downto 0);
   subtype weight_t is signed(weight_width-1 downto 0);

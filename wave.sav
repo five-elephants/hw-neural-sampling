@@ -1,0 +1,114 @@
+[*]
+[*] GTKWave Analyzer v3.3.37 (w)1999-2012 BSI
+[*] Fri Feb 21 00:18:10 2014
+[*]
+[dumpfile] "/home/simon/Projects/exploration/ghdl/dump.vcd"
+[dumpfile_mtime] "Fri Feb 21 00:11:52 2014"
+[dumpfile_size] 941096811
+[savefile] "/home/simon/Projects/exploration/ghdl/wave.sav"
+[timestart] 64800000000
+[size] 1362 745
+[pos] -1 -1
+*-32.301170 66705000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] uut.
+[treeopen] uut.gen_samplers(1).
+[treeopen] uut.gen_samplers(2).
+[treeopen] uut.gen_samplers(3).
+[treeopen] uut.gen_samplers(4).
+[sst_width] 222
+[signals_width] 246
+[sst_expanded] 1
+[sst_vpaned_height] 206
+@28
+uut.clk
+uut.reset
+uut.clock_tick
+@24
+uut.systime[63:0]
+@28
+uut.state[1:4]
+@200
+-
+@28
+uut.gen_samplers(1).sampler.state
+uut.gen_samplers(2).sampler.state
+uut.gen_samplers(3).sampler.state
+uut.gen_samplers(4).sampler.state
+@200
+-
+@28
+uut.gen_samplers(1).sampler.fire
+uut.gen_samplers(2).sampler.fire
+uut.gen_samplers(3).sampler.fire
+uut.gen_samplers(4).sampler.fire
+uut.do_prop_count
+@200
+-Sampler 0
+@8420
+uut.gen_samplers(1).sampler.membrane[15:0]
+@800022
+#{uut.gen_samplers(1).sampler.bias[0|3]} (3)uut.gen_samplers(1).sampler.bias[3:0] (2)uut.gen_samplers(1).sampler.bias[3:0] (1)uut.gen_samplers(1).sampler.bias[3:0] (0)uut.gen_samplers(1).sampler.bias[3:0] (3)uut.gen_samplers(1).sampler.bias[3:0] (2)uut.gen_samplers(1).sampler.bias[3:0] (1)uut.gen_samplers(1).sampler.bias[3:0] (0)uut.gen_samplers(1).sampler.bias[3:0] (3)uut.gen_samplers(1).sampler.bias[3:0] (2)uut.gen_samplers(1).sampler.bias[3:0] (1)uut.gen_samplers(1).sampler.bias[3:0] (0)uut.gen_samplers(1).sampler.bias[3:0] (3)uut.gen_samplers(1).sampler.bias[3:0] (2)uut.gen_samplers(1).sampler.bias[3:0] (1)uut.gen_samplers(1).sampler.bias[3:0] (0)uut.gen_samplers(1).sampler.bias[3:0]
+#{uut.gen_samplers(1).sampler.bias[3|0]} (0)uut.gen_samplers(1).sampler.bias[3:0] (1)uut.gen_samplers(1).sampler.bias[3:0] (2)uut.gen_samplers(1).sampler.bias[3:0] (3)uut.gen_samplers(1).sampler.bias[3:0] (0)uut.gen_samplers(1).sampler.bias[3:0] (1)uut.gen_samplers(1).sampler.bias[3:0] (2)uut.gen_samplers(1).sampler.bias[3:0] (3)uut.gen_samplers(1).sampler.bias[3:0]
+uut.gen_samplers(1).sampler.bias[3:0]
+@28
+(0)uut.gen_samplers(1).sampler.bias[3:0]
+(1)uut.gen_samplers(1).sampler.bias[3:0]
+(2)uut.gen_samplers(1).sampler.bias[3:0]
+(3)uut.gen_samplers(1).sampler.bias[3:0]
+@1001200
+-group_end
+-group_end
+-group_end
+@8420
+uut.gen_samplers(1).sampler.rand_off[15:0]
+@20000
+-
+-
+-
+-
+-
+@22
+uut.gen_samplers(1).sampler.gen_rngs(1).rand_out[15:0]
+uut.gen_samplers(1).sampler.gen_rngs(2).rand_out[15:0]
+uut.gen_samplers(1).sampler.gen_rngs(3).rand_out[15:0]
+uut.gen_samplers(1).sampler.gen_rngs(4).rand_out[15:0]
+uut.gen_samplers(1).sampler.gen_rngs(5).rand_out[15:0]
+uut.gen_samplers(1).sampler.gen_rngs(6).rand_out[15:0]
+uut.gen_samplers(1).sampler.gen_rngs(7).rand_out[15:0]
+@28
+uut.gen_samplers(1).sampler.state
+@200
+-Sampler 1
+@8420
+uut.gen_samplers(2).sampler.membrane[15:0]
+@22
+uut.gen_samplers(2).sampler.bias[3:0]
+uut.gen_samplers(2).sampler.rand_off[15:0]
+@28
+uut.gen_samplers(2).sampler.state
+@200
+-Sampler 3
+@28
+uut.gen_samplers(3).sampler.state
+uut.gen_samplers(3).sampler.fire
+@420
+uut.gen_samplers(3).sampler.sum_in[5:0]
+@8022
+uut.gen_samplers(3).sampler.zeta[31:0]
+@420
+uut.gen_samplers(3).sampler.bias[3:0]
+@8420
+uut.gen_samplers(3).sampler.membrane[15:0]
+uut.gen_samplers(3).sampler.rand_off[15:0]
+@200
+-Sampler 4
+@28
+uut.gen_samplers(4).sampler.state
+@420
+uut.gen_samplers(4).sampler.bias[3:0]
+@8421
+uut.gen_samplers(4).sampler.membrane[15:0]
+@420
+uut.gen_samplers(4).sampler.sum_in[5:0]
+[pattern_trace] 1
+[pattern_trace] 0

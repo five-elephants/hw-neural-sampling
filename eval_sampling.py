@@ -48,24 +48,56 @@ def count_states(states):
     return rv
 
 
+def count_joint_states(states):
+    if states:
+        rv = [ 0 for i in xrange(2**len(states[0])) ]
+        for row in states:
+            num = 0
+            for i,c in enumerate(row):
+                if c: num |= (1 << i);
+
+            rv[num] += 1
+
+        return rv
+    else:
+        return []
+
+
 def activation_function(neuron_i, states, fires, membranes):
     in_state_0 = 0
     hist = {}
+    no_fire = {}
 
-    for i in xrange(1,len(membranes)):
+    for i in xrange(0,len(membranes)):
         m = membranes[i][neuron_i]
-        if fires[i][neuron_i] and not states[i-1][neuron_i]:
+        #if fires[i][neuron_i] and not states[i-1][neuron_i]:
+        if fires[i][neuron_i]:
             if m in hist:
                 hist[m] += 1
             else:
                 hist[m] = 1
 
-        if not states[i-1][neuron_i]:
-            in_state_0 += 1
+        if not states[i][neuron_i]:
+            if m in no_fire:
+                no_fire[m] += 1
+            else:
+                no_fire[m] = 1
 
+
+        #if not states[i-1][neuron_i]:
+            #in_state_0 += 1
+
+    #for k,v in hist.iteritems():
+        #hist[k] = float(v) / float(in_state_0)
+
+    rv = {}
     for k,v in hist.iteritems():
-        hist[k] = float(v) / float(in_state_0)
-    return hist
+        if k in no_fire:
+            rv[k] = float(v) / float(v + no_fire[k])
+        else:
+            rv[k] = 1.0
+
+    return rv, no_fire, hist
 
 
 if __name__ == '__main__':

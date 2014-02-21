@@ -12,7 +12,8 @@ entity sampler is
     num_rngs : integer := 4;
     num_samplers : integer := 8;
     lfsr_polynomial : lfsr_state_t;
-    tau : integer := 20
+    tau : integer := 20;
+    threshold : membrane_t
   );
 
   port (
@@ -29,7 +30,6 @@ end sampler;
 
 
 architecture rtl of sampler is
-  constant threshold : membrane_t := make_fixed(1.5, 7, 8);
 
   subtype sum_in_t is 
     signed(integer(ceil(log2(real(num_samplers))))+weight_width-1 downto 0);
@@ -65,7 +65,10 @@ begin
     );
     ------------------------------------------------------------
 
-    rng(rng_i) <= resize(signed(rand_out), rng(rng_i)'length);
+    rng(rng_i) <= resize(
+        signed(rand_out(lfsr_use_width-1 downto 0)), 
+        rng(rng_i)'length
+    );
   end generate gen_rngs;
 
   ------------------------------------------------------------

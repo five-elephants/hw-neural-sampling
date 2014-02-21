@@ -1,6 +1,6 @@
 STD=--std=02
 OPTS=--ieee=synopsys
-RUN_OPTS=--vcd=dump.vcd --stop-time=100us
+RUN_OPTS=--vcd=dump.vcd --stop-time=2ms
 
 TOP=test_sampling
 SOURCE=\

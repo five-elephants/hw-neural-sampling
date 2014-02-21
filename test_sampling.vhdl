@@ -4,6 +4,7 @@ use IEEE.std_logic_1164.all;
 use std.textio.all;
 use IEEE.std_logic_textio.all;
 use IEEE.numeric_std.all;
+use ieee.math_real.all;
 use work.sampling.all;
 
 
@@ -14,8 +15,11 @@ end test_sampling;
 architecture behave of test_sampling is
   constant clk_period : time := 10 ns;
   constant num_samplers : integer := 4;
-  constant num_rngs_per_sampler : integer := 4;
+  constant num_rngs_per_sampler : integer := 16;
   constant tau : integer := 20;
+  constant threshold : membrane_t := make_fixed(-3.8,
+      membrane_width-1-membrane_fraction,
+      membrane_fraction);
 
   constant biases : weight_array_t(1 to num_samplers) := (
     make_fixed(-1.0, 2, 1),
@@ -32,6 +36,7 @@ architecture behave of test_sampling is
 
   signal clk, reset : std_ulogic;
   signal clock_tick : std_ulogic;
+  signal systime : systime_t;
   signal state_clamp_mask,
       state_clamp,
       state : state_array_t(1 to num_samplers);
@@ -57,12 +62,14 @@ begin
   generic map (
     num_samplers => num_samplers,
     num_rngs_per_sampler => num_rngs_per_sampler,
-    tau => tau
+    tau => tau,
+    threshold => threshold
   )
   port map (
     clk => clk,
     reset => reset,
     clock_tick => clock_tick,
+    systime => systime,
     state_clamp_mask => state_clamp_mask,
     state_clamp => state_clamp,
     state => state,
@@ -80,9 +87,15 @@ begin
 
   stimulus: process
     variable l : line;
+    variable seed1, seed2 : positive;
+    variable rand : real;
+    variable int_rand : integer;
   begin
     for i in seeds'range loop
-      seeds(i) <= std_logic_vector(to_unsigned(i, seeds(i)'length));
+      uniform(seed1, seed2, rand);
+      int_rand := integer(rand*(2.0**lfsr_width-1.0));
+      seeds(i) <= std_logic_vector(to_unsigned(int_rand, seeds(i)'length));
+      --seeds(i) <= std_logic_vector(to_unsigned(2**lfsr_width - i, seeds(i)'length));
     end loop;
 
     write(l, string'("biases:"));
@@ -109,13 +122,13 @@ begin
     reset <= '0';
     wait until rising_edge(clk);
 
-    loop
-      write(l, string'("state: "));
-      write(l, std_logic_vector(state));
-      writeline(output, l);
+    --loop
+      --write(l, string'("state: "));
+      --write(l, std_logic_vector(state));
+      --writeline(output, l);
 
-      wait until rising_edge(clock_tick);
-    end loop;
+      --wait until rising_edge(clock_tick);
+    --end loop;
 
     wait;
   end process;
