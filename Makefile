@@ -1,8 +1,10 @@
 STD=--std=02
 OPTS=--ieee=synopsys
-RUN_OPTS=--vcd=dump.vcd --stop-time=2ms
+#RUN_OPTS=--vcd=dump.vcd --stop-time=2ms
+RUN_OPTS=
 
-TOP=test_sampling
+#TOP=test_sampling
+TOP=test_activation
 SOURCE=\
 			 sampling_pkg.vhdl \
 			 lfsr.vhdl \
@@ -10,7 +12,8 @@ SOURCE=\
 			 input_sum.vhdl \
 			 sampler.vhdl \
 			 sampling_network.vhdl \
-			 test_sampling.vhdl
+			 test_sampling.vhdl \
+			 test_activation.vhdl
 
 all: run
 

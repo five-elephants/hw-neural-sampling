@@ -12,7 +12,7 @@ package sampling is
   constant membrane_width : integer := 16;
   constant membrane_fraction : integer := 10;
   constant lfsr_width : integer := 16;
-  constant lfsr_use_width : integer := 12;
+  constant lfsr_use_width : integer := 11;
   constant lfsr_fraction : integer := 10;
 
   subtype systime_t is unsigned(63 downto 0);

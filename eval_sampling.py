@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import csv
+from collections import defaultdict
 
 def string_to_bool(s):
     if s == '1':
@@ -65,39 +66,36 @@ def count_joint_states(states):
 
 def activation_function(neuron_i, states, fires, membranes):
     in_state_0 = 0
-    hist = {}
-    no_fire = {}
+    hist = defaultdict(int)
+    no_fire = defaultdict(int)
 
     for i in xrange(0,len(membranes)):
         m = membranes[i][neuron_i]
-        #if fires[i][neuron_i] and not states[i-1][neuron_i]:
         if fires[i][neuron_i]:
-            if m in hist:
-                hist[m] += 1
-            else:
-                hist[m] = 1
+            hist[m] += 1
 
         if not states[i][neuron_i]:
-            if m in no_fire:
-                no_fire[m] += 1
-            else:
-                no_fire[m] = 1
+            no_fire[m] += 1
 
-
-        #if not states[i-1][neuron_i]:
-            #in_state_0 += 1
-
-    #for k,v in hist.iteritems():
-        #hist[k] = float(v) / float(in_state_0)
-
-    rv = {}
-    for k,v in hist.iteritems():
-        if k in no_fire:
-            rv[k] = float(v) / float(v + no_fire[k])
-        else:
-            rv[k] = 1.0
+    rv = defaultdict(float)
+    for k in set(hist.keys() + no_fire.keys()):
+        rv[k] = float(hist[k]) / float(hist[k] + no_fire[k])
 
     return rv, no_fire, hist
+
+
+def plot_activation_function(h, tau=0.02, fignum=0):
+    fig = plt.figure(fignum)
+    plt.clf()
+    x = np.linspace(-10.0, 10.0, 100)
+    y = 1.0/(1 + np.exp(-x + np.log(tau)))
+    plt.plot(x, y)
+    plt.plot(h[0].keys(), h[0].values(), '+')
+    plt.hlines([0.5], xmin=-10.0, xmax=10.0)
+    plt.ylim((-0.1, 1.1))
+    return fig
+
+
 
 
 if __name__ == '__main__':
