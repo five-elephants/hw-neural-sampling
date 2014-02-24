@@ -17,7 +17,7 @@ def string_to_fixed(s, width=16, fraction=8):
     else:
         return float(uns) / 2.0**fraction
 
-def read_trace(filename, mem_width=16):
+def read_trace(filename, mem_width=16, mem_fraction=10):
     states = []
     fires = []
     membranes = []
@@ -35,7 +35,9 @@ def read_trace(filename, mem_width=16):
                     elif i % 3 == 1:
                         fires[-1].append(string_to_bool(cell))
                     else:
-                        membranes[-1].append(string_to_fixed(cell, mem_width))
+                        membranes[-1].append(string_to_fixed(cell,
+                                                             mem_width,
+                                                             mem_fraction))
 
     return states, fires, membranes
 
@@ -84,17 +86,36 @@ def activation_function(neuron_i, states, fires, membranes):
     return rv, no_fire, hist
 
 
-def plot_activation_function(h, tau=0.02, fignum=0):
-    fig = plt.figure(fignum)
+def plot_activation_function(p, tau=0.02, fignum=0, figsize=(8,6)):
+    fig = plt.figure(fignum, figsize=figsize)
     plt.clf()
     x = np.linspace(-10.0, 10.0, 100)
     y = 1.0/(1 + np.exp(-x + np.log(tau)))
     plt.plot(x, y)
-    plt.plot(h[0].keys(), h[0].values(), '+')
+    plt.plot(p.keys(), p.values(), '+')
     plt.hlines([0.5], xmin=-10.0, xmax=10.0)
     plt.ylim((-0.1, 1.1))
     return fig
 
+
+def spikes_with_timestamps(fires):
+    rv = []
+    for t,f in enumerate(fires):
+        for i,spike in enumerate(f):
+            if spike:
+                rv.append([t, i])
+    return rv
+
+
+def plot_spikes(states, fires):
+    fig = plt.figure(figsize=(15,10))
+
+    spikes = np.array(spikes_with_timestamps(fires))
+    states_ar = np.array(states)
+    for i in xrange(len(states[0])):
+        plt.plot(0.1*states_ar[:,i]+i)
+    plt.plot(spikes[:,0], spikes[:,1], '|', markersize=20)
+    return fig
 
 
 

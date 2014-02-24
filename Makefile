@@ -17,6 +17,12 @@ SOURCE=\
 
 all: run
 
+activation: elaborate_activation
+	./test_activation
+
+sampling: elaborate_sampling
+	./test_sampling --vcd=dump.vcd --stop-time=2ms
+
 .PHONY: clean
 clean:
 	ghdl --clean
@@ -24,9 +30,9 @@ clean:
 analyze: $(SOURCE)
 	ghdl -a $(STD) $(OPTS) $(SOURCE)
 
-elaborate: analyze
-	ghdl -e $(OPTS) $(TOP)
+elaborate_sampling: analyze
+	ghdl -e $(OPTS) test_sampling 
 
-run: elaborate
-	./$(TOP) $(RUN_OPTS)
+elaborate_activation: analyze
+	ghdl -e $(OPTS) test_activation
 

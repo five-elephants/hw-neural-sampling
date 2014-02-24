@@ -52,7 +52,7 @@ begin
   begin
 
     ------------------------------------------------------------
-    rng_inst: entity work.lfsr
+    rng_inst: entity work.lfsr(behave)
     generic map (
       width => lfsr_width
     )
@@ -94,8 +94,14 @@ begin
       membrane_i <= to_signed(0, membrane'length);
     elsif rising_edge(clk) then
       if phase = propagate then
-        bias_ext := shift_left(resize(bias, bias_ext'length), membrane_fraction-weight_fraction);
-        sum_in_ext := shift_left(resize(sum_in, sum_in_ext'length), membrane_fraction-weight_fraction);
+        bias_ext := shift_left(
+            resize(bias, bias_ext'length),
+            membrane_fraction-weight_fraction
+        );
+        sum_in_ext := shift_left(
+            resize(sum_in, sum_in_ext'length),
+            membrane_fraction-weight_fraction
+        );
         membrane_i <= sum_in_ext + bias_ext;
       end if;
     end if;

@@ -15,9 +15,9 @@ end test_activation;
 architecture behave of test_activation is
   constant clk_period : time := 10 ns;
   constant num_samplers : integer := 1;
-  constant num_rngs_per_sampler : integer := 2;
+  constant num_rngs_per_sampler : integer := 8;
   constant tau : integer := 20;
-  constant threshold : membrane_t := make_fixed(0.0,
+  constant threshold : membrane_t := make_fixed(-3.8,
       membrane_width-1-membrane_fraction,
       membrane_fraction);
 
