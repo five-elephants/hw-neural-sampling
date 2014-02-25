@@ -51,7 +51,7 @@ begin
   begin
 
     ------------------------------------------------------------
-    rng_inst: entity work.lfsr(behave)
+    rng_inst: entity work.lfsr(rtl)
     generic map (
       width => lfsr_width
     )
@@ -110,6 +110,99 @@ begin
 
   ------------------------------------------------------------
   refractory_fsm: process ( clk, reset )
+    variable over_thresh : boolean;
+  begin
+    if reset = '1' then
+      zeta <= 0;
+      fire <= '0';
+    elsif rising_edge(clk) then
+
+      if phase = evaluate then
+        over_thresh := membrane_i + rand_off > threshold;
+        fire <= '0';
+
+        case zeta is
+          when 1 =>
+            if over_thresh then
+              zeta <= tau;
+              fire <= '1';
+            else
+              zeta <= 0;
+            end if;
+
+          when 0 =>
+            if over_thresh then
+              zeta <= tau;
+              fire <= '1';
+            end if;
+
+          when others =>
+            zeta <= zeta - 1;
+        end case;
+      end if;
+
+    end if;
+  end process;
+  ------------------------------------------------------------
+
+
+  ------------------------------------------------------------
+  refractory_fsm_output: process ( zeta )
+  begin
+    if zeta > 0 then
+      state <= '1';
+    else
+      state <= '0';
+    end if;
+  end process;
+  ------------------------------------------------------------
+  
+
+end rtl;
+
+    
+architecture behave of sampler is
+
+  subtype sum_in_t is 
+    signed(sum_in_size(num_samplers)-1 downto 0);
+
+  type state_number_array_t is array(1 to num_rngs) of
+      membrane_t;
+
+  subtype zeta_t is integer range 0 to tau;
+
+  signal membrane_i : membrane_t;
+  signal zeta : zeta_t;
+begin
+
+  membrane <= membrane_i;
+  
+  ------------------------------------------------------------
+  membrane_adder: process(clk, reset)
+    variable sum_in_ext : membrane_t;
+    variable bias_ext : membrane_t;
+  begin
+    if reset = '1' then
+      membrane_i <= to_signed(0, membrane'length);
+    elsif rising_edge(clk) then
+      if phase = propagate then
+        bias_ext := shift_left(
+            resize(bias, bias_ext'length),
+            membrane_fraction-weight_fraction
+        );
+        sum_in_ext := shift_left(
+            resize(sum_in, sum_in_ext'length),
+            membrane_fraction-weight_fraction
+        );
+        membrane_i <= sum_in_ext + bias_ext;
+      end if;
+    end if;
+  end process;
+  ------------------------------------------------------------
+
+
+  ------------------------------------------------------------
+  refractory_fsm: process ( clk, reset )
     constant log_tau : real := log(20.0);
     variable seed1, seed2 : positive;
     variable rand : real;
@@ -126,7 +219,6 @@ begin
     elsif rising_edge(clk) then
 
       if phase = evaluate then
-        --over_thresh := membrane_i + rand_off > threshold;
         uniform(seed1, seed2, rand);
         u := real(to_integer(membrane_i)) / 2.0**membrane_fraction;
         cmp := 1.0 / (1.0 + exp(-u + log_tau));
@@ -170,7 +262,5 @@ begin
   ------------------------------------------------------------
   
 
-end rtl;
-
-    
+end behave;
 -- vim: set et fenc=utf-8 ff=unix sts=0 sw=2 ts=2 : --

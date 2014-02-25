@@ -22,7 +22,7 @@ activation: elaborate_activation
 
 sampling: elaborate_sampling
 	#./test_sampling --vcd=dump.vcd --stop-time=10ms
-	./test_sampling --stop-time=10ms
+	./test_sampling --stop-time=2ms
 
 .PHONY: clean
 clean:

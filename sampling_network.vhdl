@@ -72,7 +72,7 @@ begin
     );
 
 
-    sampler: entity work.sampler
+    sampler: entity work.sampler(rtl)
     generic map (
       num_rngs => num_rngs_per_sampler,
       num_samplers => num_samplers,
