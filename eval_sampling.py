@@ -51,19 +51,20 @@ def count_states(states):
     return rv
 
 
-def count_joint_states(states):
-    if states:
-        rv = [ 0 for i in xrange(2**len(states[0])) ]
-        for row in states:
-            num = 0
-            for i,c in enumerate(row):
-                if c: num |= (1 << i);
+#def count_joint_states(states):
+    #if states:
+        #K = 2**len(states[0])
+        #rv = [ 0 for i in xrange(K) ]
+        #for row in states:
+            #num = 0
+            #for i,c in enumerate(row):
+                #if c: num |= (1 << (K-i-1));
 
-            rv[num] += 1
+            #rv[num] += 1
 
-        return rv
-    else:
-        return []
+        #return rv
+    #else:
+        #return []
 
 
 def activation_function(neuron_i, states, fires, membranes):
@@ -86,7 +87,7 @@ def activation_function(neuron_i, states, fires, membranes):
     return rv, no_fire, hist
 
 
-def plot_activation_function(p, tau=0.02, fignum=0, figsize=(8,6)):
+def plot_activation_function(p, tau=20, fignum=0, figsize=(8,6)):
     fig = plt.figure(fignum, figsize=figsize)
     plt.clf()
     x = np.linspace(-10.0, 10.0, 100)
@@ -117,6 +118,15 @@ def plot_spikes(states, fires):
     plt.plot(spikes[:,0], spikes[:,1], '|', markersize=20)
     return fig
 
+
+def plot_membrane(membranes):
+    fig = plt.figure(figsize=(15,10))
+
+    mem_ar = np.array(membranes)
+    for i in xrange(len(membranes[0])):
+        plt.plot(mem_ar[:,i], label='neuron %d' % i)
+    plt.legend(loc='best')
+    return fig
 
 
 if __name__ == '__main__':

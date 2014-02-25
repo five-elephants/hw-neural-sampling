@@ -51,9 +51,13 @@ package sampling is
   constant lfsr_polynomial : lfsr_state_t := "1011010000000000";
 
 
+  -- generate a fixed point number in the given representation
   function make_fixed(number : real; i_width, f_width : natural)
       return signed;
 
+  -- compute size of input to sampler from synapses
+  function sum_in_size(num_samplers : positive)
+      return positive;
 end sampling;
 
 
@@ -66,5 +70,12 @@ package body sampling is
     rv := to_signed(integer(number * (2.0**f_width) ), i_width+f_width+1);
     return rv;
   end make_fixed;
+
+
+  function sum_in_size(num_samplers : positive)
+      return positive is
+  begin
+    return weight_width + num_samplers;
+  end sum_in_size;
 
 end sampling;

@@ -2,8 +2,7 @@ library ieee;
 
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use ieee.math_real.ceil;
-use ieee.math_real.log2;
+use ieee.math_real.all;
 use work.sampling.all;
 
 
@@ -20,7 +19,7 @@ entity sampler is
     clk, reset : in std_ulogic;
     phase : in phase_t;
     bias : in weight_t;
-    sum_in : in signed(integer(ceil(log2(real(num_samplers))))+weight_width-1 downto 0);
+    sum_in : in signed(sum_in_size(num_samplers)-1 downto 0);
     state : out std_ulogic;
     membrane : out membrane_t;
     fire : out std_ulogic;
@@ -32,7 +31,7 @@ end sampler;
 architecture rtl of sampler is
 
   subtype sum_in_t is 
-    signed(integer(ceil(log2(real(num_samplers))))+weight_width-1 downto 0);
+    signed(sum_in_size(num_samplers)-1 downto 0);
 
   type state_number_array_t is array(1 to num_rngs) of
       membrane_t;
@@ -111,15 +110,27 @@ begin
 
   ------------------------------------------------------------
   refractory_fsm: process ( clk, reset )
+    constant log_tau : real := log(20.0);
+    variable seed1, seed2 : positive;
+    variable rand : real;
+    variable cmp : real;
+    variable u : real;
+
     variable over_thresh : boolean;
   begin
     if reset = '1' then
       zeta <= 0;
       fire <= '0';
+      seed1 := to_integer(unsigned(seeds(1)));
+      seed2 := to_integer(unsigned(seeds(2)));
     elsif rising_edge(clk) then
 
       if phase = evaluate then
-        over_thresh := membrane_i + rand_off > threshold;
+        --over_thresh := membrane_i + rand_off > threshold;
+        uniform(seed1, seed2, rand);
+        u := real(to_integer(membrane_i)) / 2.0**membrane_fraction;
+        cmp := 1.0 / (1.0 + exp(-u + log_tau));
+        over_thresh := rand < cmp;
         fire <= '0';
 
         case zeta is

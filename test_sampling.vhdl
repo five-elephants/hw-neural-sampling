@@ -17,7 +17,7 @@ architecture behave of test_sampling is
   constant num_samplers : integer := 4;
   constant num_rngs_per_sampler : integer := 8;
   constant tau : integer := 20;
-  constant threshold : membrane_t := make_fixed(-3.8,
+  constant threshold : membrane_t := make_fixed(3.0,
       membrane_width-1-membrane_fraction,
       membrane_fraction);
 

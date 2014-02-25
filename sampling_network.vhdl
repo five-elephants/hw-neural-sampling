@@ -31,7 +31,7 @@ end sampling_network;
 
 architecture rtl of sampling_network is
   subtype sum_in_t is 
-    signed(integer(ceil(log2(real(num_samplers))))+weight_width-1 downto 0);
+    signed(sum_in_size(num_samplers)-1 downto 0);
 
   signal phase : phase_t;
   signal do_prop_count : std_ulogic;
