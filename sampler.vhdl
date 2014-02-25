@@ -110,7 +110,7 @@ begin
 
 
   ------------------------------------------------------------
-  activation_function: entity work.activation(behave)
+  activation_function: entity work.activation(rtl)
   generic map (
     lfsr_polynomial => lfsr_polynomial
   )

@@ -10,10 +10,10 @@ package sampling is
   constant weight_width : integer := 4;
   constant weight_fraction : integer := 1;
   constant membrane_width : integer := 16;
-  constant membrane_fraction : integer := 10;
+  constant membrane_fraction : integer := 8;
   constant lfsr_width : integer := 16;
-  constant lfsr_use_width : integer := 11;
-  constant lfsr_fraction : integer := 10;
+  constant lfsr_use_width : integer := 4;
+  constant lfsr_fraction : integer := 4;
 
   subtype systime_t is unsigned(63 downto 0);
   subtype lfsr_state_t is std_logic_vector(lfsr_width-1 downto 0);
@@ -55,6 +55,9 @@ package sampling is
   function make_fixed(number : real; i_width, f_width : natural)
       return signed;
 
+  function make_ufixed(number : real; i_width, f_width : natural)
+      return unsigned;
+
   -- compute size of input to sampler from synapses
   function sum_in_size(num_samplers : positive)
       return positive;
@@ -70,6 +73,15 @@ package body sampling is
     rv := to_signed(integer(number * (2.0**f_width) ), i_width+f_width+1);
     return rv;
   end make_fixed;
+
+
+  function make_ufixed(number : real; i_width, f_width : natural)
+      return unsigned is
+    variable rv : unsigned(i_width+f_width-1 downto 0);
+  begin
+    rv := to_unsigned(integer(number * (2.0**f_width) ), rv'length);
+    return rv;
+  end make_ufixed;
 
 
   function sum_in_size(num_samplers : positive)
