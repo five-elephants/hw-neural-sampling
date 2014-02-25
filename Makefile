@@ -10,6 +10,7 @@ SOURCE=\
 			 lfsr.vhdl \
 			 test_lfsr.vhdl \
 			 input_sum.vhdl \
+			 activation.vhdl \
 			 sampler.vhdl \
 			 sampling_network.vhdl \
 			 test_sampling.vhdl \

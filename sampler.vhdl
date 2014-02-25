@@ -42,6 +42,7 @@ architecture rtl of sampler is
   signal membrane_i : membrane_t;
   signal rand_off : membrane_t;
   signal zeta : zeta_t;
+  signal activate : std_ulogic;
 begin
 
   membrane <= membrane_i;
@@ -109,6 +110,21 @@ begin
 
 
   ------------------------------------------------------------
+  activation_function: entity work.activation(behave)
+  generic map (
+    lfsr_polynomial => lfsr_polynomial
+  )
+  port map (
+    clk => clk,
+    reset => reset,
+    membrane => membrane_i,
+    active => activate,
+    seed => seeds(1)
+  );
+  ------------------------------------------------------------
+
+
+  ------------------------------------------------------------
   refractory_fsm: process ( clk, reset )
     variable over_thresh : boolean;
   begin
@@ -118,7 +134,8 @@ begin
     elsif rising_edge(clk) then
 
       if phase = evaluate then
-        over_thresh := membrane_i + rand_off > threshold;
+        --over_thresh := membrane_i + rand_off > threshold;
+        over_thresh := (activate = '1');
         fire <= '0';
 
         case zeta is
@@ -161,6 +178,10 @@ begin
 end rtl;
 
     
+
+
+
+
 architecture behave of sampler is
 
   subtype sum_in_t is 
