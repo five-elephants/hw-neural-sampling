@@ -1,0 +1,10 @@
+.*.sw?
+*.pyc
+*.o
+*.vcd
+trace
+activation_trace
+test_sampling
+test_activation
+*.cf
+.ropeproject
