@@ -12,8 +12,8 @@ package sampling is
   constant membrane_width : integer := 16;
   constant membrane_fraction : integer := 8;
   constant lfsr_width : integer := 16;
-  constant lfsr_use_width : integer := 4;
-  constant lfsr_fraction : integer := 4;
+  constant lfsr_use_width : integer := 16;
+  constant lfsr_fraction : integer := 8;
 
   subtype systime_t is unsigned(63 downto 0);
   subtype lfsr_state_t is std_logic_vector(lfsr_width-1 downto 0);

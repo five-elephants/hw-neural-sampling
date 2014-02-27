@@ -94,6 +94,14 @@ architecture rtl of activation is
     6 => make_ufixed(0.037327, lfsr_use_width-lfsr_fraction, lfsr_fraction),
     7 => make_ufixed(0.022977, lfsr_use_width-lfsr_fraction, lfsr_fraction)
   );
+  constant membrane_min : membrane_t := make_fixed(-4.0,
+      membrane_width-membrane_fraction-1,
+      membrane_fraction
+  );
+  constant membrane_max : membrane_t := make_fixed(3.5,
+      membrane_width-membrane_fraction-1,
+      membrane_fraction
+  );
   constant log_tau : membrane_t := make_fixed(log(tau),
       membrane_width-membrane_fraction-1,
       membrane_fraction
@@ -160,23 +168,29 @@ begin
   end process;
 
   ------------------------------------------------------------
-  process ( membrane, rng_out )
+  process ( x, rng_out )
     variable u : membrane_index_t;
     variable rand, cmp : cmp_t;
   begin
-    u := unsigned(resize(
-        shift_right(x,
-            membrane_fraction-lookup_fraction
-        ),
-        u'length
-    )); 
-    rand := resize(unsigned(rng_out), rand'length);
-    cmp := sigma_lookup(to_integer(u));
-
-    if rand < cmp then
+    if x <= membrane_min then
       active <= '1';
-    else
+    elsif x >= membrane_max then
       active <= '0';
+    else
+      u := unsigned(resize(
+          shift_right(x,
+              membrane_fraction-lookup_fraction
+          ),
+          u'length
+      )); 
+      rand := resize(unsigned(rng_out), rand'length);
+      cmp := sigma_lookup(to_integer(u));
+
+      if rand(lfsr_fraction-1 downto 0) < cmp(lfsr_fraction-1 downto 0) then
+        active <= '1';
+      else
+        active <= '0';
+      end if;
     end if;
   end process;
   ------------------------------------------------------------
