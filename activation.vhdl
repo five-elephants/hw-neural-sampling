@@ -69,68 +69,100 @@ end behave;
 
 
 architecture rtl of activation is
-  subtype membrane_index_t is unsigned(3 downto 0);
+  constant lookup_width : integer := 4;
+  constant lookup_fraction : integer := 1;
+  subtype membrane_index_t is unsigned(lookup_width-1 downto 0);
   subtype cmp_t is unsigned(lfsr_use_width-1 downto 0);
   type lookup_t is array(0 to 15) 
       of cmp_t;
 
-  constant lookup_fraction : integer := 1;
   constant sigma_lookup : lookup_t :=
   (
-  -- centered points
-    --8 => make_ufixed(0.977023, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    --9 => make_ufixed(0.962673, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    --10 => make_ufixed(0.939913, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    --11 => make_ufixed(0.904651, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    --12 => make_ufixed(0.851953, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    --13 => make_ufixed(0.777300, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    --14 => make_ufixed(0.679179, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    --15 => make_ufixed(0.562177, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    --0 => make_ufixed(0.437823, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    --1 => make_ufixed(0.320821, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    --2 => make_ufixed(0.222700, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    --3 => make_ufixed(0.148047, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    --4 => make_ufixed(0.095349, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    --5 => make_ufixed(0.060087, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    --6 => make_ufixed(0.037327, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    --7 => make_ufixed(0.022977, lfsr_use_width-lfsr_fraction, lfsr_fraction)
-
   -- lookup for -u + log tau
    8 => make_ufixed(0.000915, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	 9 => make_ufixed(0.001508, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	10 => make_ufixed(0.002483, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	11 => make_ufixed(0.004087, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	12 => make_ufixed(0.006721, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	13 => make_ufixed(0.011033, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	14 => make_ufixed(0.018062, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	15 => make_ufixed(0.029434, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	 0 => make_ufixed(0.047619, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	 1 => make_ufixed(0.076158, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	 2 => make_ufixed(0.119652, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	 3 => make_ufixed(0.183063, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	 4 => make_ufixed(0.269781, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	 5 => make_ufixed(0.378544, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	 6 => make_ufixed(0.501067, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	 7 => make_ufixed(0.623462, lfsr_use_width-lfsr_fraction, lfsr_fraction)
+   9 => make_ufixed(0.001508, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+  10 => make_ufixed(0.002483, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+  11 => make_ufixed(0.004087, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+  12 => make_ufixed(0.006721, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+  13 => make_ufixed(0.011033, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+  14 => make_ufixed(0.018062, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+  15 => make_ufixed(0.029434, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+   0 => make_ufixed(0.047619, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+   1 => make_ufixed(0.076158, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+   2 => make_ufixed(0.119652, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+   3 => make_ufixed(0.183063, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+   4 => make_ufixed(0.269781, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+   5 => make_ufixed(0.378544, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+   6 => make_ufixed(0.501067, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+   7 => make_ufixed(0.623462, lfsr_use_width-lfsr_fraction, lfsr_fraction)
 
+  -- 4.1
+  --16 => make_ufixed(0.000017, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--17 => make_ufixed(0.000028, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--18 => make_ufixed(0.000046, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--19 => make_ufixed(0.000075, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--20 => make_ufixed(0.000124, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--21 => make_ufixed(0.000204, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--22 => make_ufixed(0.000337, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--23 => make_ufixed(0.000555, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--24 => make_ufixed(0.000915, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--25 => make_ufixed(0.001508, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--26 => make_ufixed(0.002483, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--27 => make_ufixed(0.004087, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--28 => make_ufixed(0.006721, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--29 => make_ufixed(0.011033, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--30 => make_ufixed(0.018062, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--31 => make_ufixed(0.029434, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --0 => make_ufixed(0.047619, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --1 => make_ufixed(0.076158, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --2 => make_ufixed(0.119652, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --3 => make_ufixed(0.183063, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --4 => make_ufixed(0.269781, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --5 => make_ufixed(0.378544, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --6 => make_ufixed(0.501067, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --7 => make_ufixed(0.623462, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --8 => make_ufixed(0.731897, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --9 => make_ufixed(0.818210, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--10 => make_ufixed(0.881244, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--11 => make_ufixed(0.924440, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--12 => make_ufixed(0.952767, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--13 => make_ufixed(0.970809, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--14 => make_ufixed(0.982089, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--15 => make_ufixed(0.989059, lfsr_use_width-lfsr_fraction, lfsr_fraction)
 
-  -- left anchored points
-   --8 => make_ufixed(0.982014, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	 --9 => make_ufixed(0.970688, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	--10 => make_ufixed(0.952574, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	--11 => make_ufixed(0.924142, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	--12 => make_ufixed(0.880797, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	--13 => make_ufixed(0.817574, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	--14 => make_ufixed(0.731059, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	--15 => make_ufixed(0.622459, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	 --0 => make_ufixed(0.500000, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	 --1 => make_ufixed(0.377541, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	 --2 => make_ufixed(0.268941, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	 --3 => make_ufixed(0.182426, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	 --4 => make_ufixed(0.119203, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	 --5 => make_ufixed(0.075858, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	 --6 => make_ufixed(0.047426, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-	 --7 => make_ufixed(0.029312, lfsr_use_width-lfsr_fraction, lfsr_fraction)
+  -- 3.2
+  --16 => make_ufixed(0.000915, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--17 => make_ufixed(0.001175, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--18 => make_ufixed(0.001508, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--19 => make_ufixed(0.001935, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--20 => make_ufixed(0.002483, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--21 => make_ufixed(0.003186, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--22 => make_ufixed(0.004087, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--23 => make_ufixed(0.005242, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--24 => make_ufixed(0.006721, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--25 => make_ufixed(0.008614, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--26 => make_ufixed(0.011033, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--27 => make_ufixed(0.014123, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--28 => make_ufixed(0.018062, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--29 => make_ufixed(0.023073, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--30 => make_ufixed(0.029434, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--31 => make_ufixed(0.037481, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --0 => make_ufixed(0.047619, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --1 => make_ufixed(0.060328, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --2 => make_ufixed(0.076158, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --3 => make_ufixed(0.095718, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --4 => make_ufixed(0.119652, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --5 => make_ufixed(0.148586, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --6 => make_ufixed(0.183063, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --7 => make_ufixed(0.223440, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --8 => make_ufixed(0.269781, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --9 => make_ufixed(0.321752, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--10 => make_ufixed(0.378544, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--11 => make_ufixed(0.438874, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--12 => make_ufixed(0.501067, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--13 => make_ufixed(0.563227, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--14 => make_ufixed(0.623462, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--15 => make_ufixed(0.680108, lfsr_use_width-lfsr_fraction, lfsr_fraction)
   );
   constant membrane_min : membrane_t := make_fixed(-4.0,
       membrane_width-membrane_fraction-1,
@@ -166,45 +198,45 @@ begin
   );
   ------------------------------------------------------------
 
-  process
-    variable ln : line;
-    variable u : membrane_index_t;
-  begin
-    write(ln, string'("log_tau = "));
-    hwrite(ln, std_logic_vector(log_tau));
-    writeline(output, ln);
+  --process
+    --variable ln : line;
+    --variable u : membrane_index_t;
+  --begin
+    --write(ln, string'("log_tau = "));
+    --hwrite(ln, std_logic_vector(log_tau));
+    --writeline(output, ln);
 
-    write(ln, string'("lookup values"));
-    writeline(output, ln);
+    --write(ln, string'("lookup values"));
+    --writeline(output, ln);
 
-    for v in sigma_lookup'range loop
-      write(ln, v);
-      write(ln, string'(" : "));
-      hwrite(ln, std_logic_vector(sigma_lookup(v)));
-      writeline(output, ln);
-    end loop;
+    --for v in sigma_lookup'range loop
+      --write(ln, v);
+      --write(ln, string'(" : "));
+      --hwrite(ln, std_logic_vector(sigma_lookup(v)));
+      --writeline(output, ln);
+    --end loop;
 
-    loop
-      wait until x'event;
+    --loop
+      --wait until x'event;
       
-      u := unsigned(resize(
-          shift_right(x,
-              membrane_fraction-lookup_fraction
-          ),
-          u'length
-      )); 
+      --u := unsigned(resize(
+          --shift_right(x,
+              --membrane_fraction-lookup_fraction
+          --),
+          --u'length
+      --)); 
 
-      write(ln, string'("x: "));
-      hwrite(ln, std_logic_vector(x));
-      write(ln, string'(" u = "));
-      hwrite(ln, std_logic_vector(u));
-      write(ln, string'(" sigma_lookup(x) = "));
-      hwrite(ln, std_logic_vector(sigma_lookup(to_integer(u))));
-      writeline(output, ln);
-    end loop;
+      --write(ln, string'("x: "));
+      --hwrite(ln, std_logic_vector(x));
+      --write(ln, string'(" u = "));
+      --hwrite(ln, std_logic_vector(u));
+      --write(ln, string'(" sigma_lookup(x) = "));
+      --hwrite(ln, std_logic_vector(sigma_lookup(to_integer(u))));
+      --writeline(output, ln);
+    --end loop;
 
-    wait; 
-  end process;
+    --wait; 
+  --end process;
 
   ------------------------------------------------------------
   process ( x, rng_out )
