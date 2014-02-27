@@ -47,42 +47,42 @@ begin
 
   membrane <= membrane_i;
   
-  gen_rngs: for rng_i in 1 to num_rngs generate 
-    signal rand_out : lfsr_state_t;
-  begin
+  --gen_rngs: for rng_i in 1 to num_rngs generate 
+    --signal rand_out : lfsr_state_t;
+  --begin
 
-    ------------------------------------------------------------
-    rng_inst: entity work.lfsr(rtl)
-    generic map (
-      width => lfsr_width
-    )
-    port map (
-      clk => clk,
-      reset => reset,
-      seed => seeds(rng_i),
-      poly => lfsr_polynomial,
-      rand_out => rand_out
-    );
-    ------------------------------------------------------------
+    --------------------------------------------------------------
+    --rng_inst: entity work.lfsr(rtl)
+    --generic map (
+      --width => lfsr_width
+    --)
+    --port map (
+      --clk => clk,
+      --reset => reset,
+      --seed => seeds(rng_i),
+      --poly => lfsr_polynomial,
+      --rand_out => rand_out
+    --);
+    --------------------------------------------------------------
 
-    rng(rng_i) <= resize(
-        signed(rand_out(lfsr_use_width-1 downto 0)), 
-        rng(rng_i)'length
-    );
-  end generate gen_rngs;
+    --rng(rng_i) <= resize(
+        --signed(rand_out(lfsr_use_width-1 downto 0)), 
+        --rng(rng_i)'length
+    --);
+  --end generate gen_rngs;
 
-  ------------------------------------------------------------
-  sum_rand_off: process ( rng )
-    variable acc : membrane_t;
-  begin
-    acc := to_signed(0, acc'length);
-    for i in rng'range loop
-      acc := acc + rng(i);
-    end loop;
+  --------------------------------------------------------------
+  --sum_rand_off: process ( rng )
+    --variable acc : membrane_t;
+  --begin
+    --acc := to_signed(0, acc'length);
+    --for i in rng'range loop
+      --acc := acc + rng(i);
+    --end loop;
 
-    rand_off <= shift_left(acc, membrane_fraction-lfsr_fraction);
-  end process;
-  ------------------------------------------------------------
+    --rand_off <= shift_left(acc, membrane_fraction-lfsr_fraction);
+  --end process;
+  --------------------------------------------------------------
 
 
   ------------------------------------------------------------

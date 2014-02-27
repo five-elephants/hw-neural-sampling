@@ -77,6 +77,7 @@ architecture rtl of activation is
   constant lookup_fraction : integer := 1;
   constant sigma_lookup : lookup_t :=
   (
+  -- centered points
     8 => make_ufixed(0.977023, lfsr_use_width-lfsr_fraction, lfsr_fraction),
     9 => make_ufixed(0.962673, lfsr_use_width-lfsr_fraction, lfsr_fraction),
     10 => make_ufixed(0.939913, lfsr_use_width-lfsr_fraction, lfsr_fraction),
@@ -93,6 +94,24 @@ architecture rtl of activation is
     5 => make_ufixed(0.060087, lfsr_use_width-lfsr_fraction, lfsr_fraction),
     6 => make_ufixed(0.037327, lfsr_use_width-lfsr_fraction, lfsr_fraction),
     7 => make_ufixed(0.022977, lfsr_use_width-lfsr_fraction, lfsr_fraction)
+
+  -- left anchored points
+   --8 => make_ufixed(0.982014, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --9 => make_ufixed(0.970688, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--10 => make_ufixed(0.952574, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--11 => make_ufixed(0.924142, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--12 => make_ufixed(0.880797, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--13 => make_ufixed(0.817574, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--14 => make_ufixed(0.731059, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	--15 => make_ufixed(0.622459, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --0 => make_ufixed(0.500000, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --1 => make_ufixed(0.377541, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --2 => make_ufixed(0.268941, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --3 => make_ufixed(0.182426, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --4 => make_ufixed(0.119203, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --5 => make_ufixed(0.075858, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --6 => make_ufixed(0.047426, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 --7 => make_ufixed(0.029312, lfsr_use_width-lfsr_fraction, lfsr_fraction)
   );
   constant membrane_min : membrane_t := make_fixed(-4.0,
       membrane_width-membrane_fraction-1,
@@ -172,9 +191,9 @@ begin
     variable u : membrane_index_t;
     variable rand, cmp : cmp_t;
   begin
-    if x <= membrane_min then
+    if x < membrane_min then
       active <= '1';
-    elsif x >= membrane_max then
+    elsif x > membrane_max then
       active <= '0';
     else
       u := unsigned(resize(
