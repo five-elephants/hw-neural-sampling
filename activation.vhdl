@@ -78,22 +78,41 @@ architecture rtl of activation is
   constant sigma_lookup : lookup_t :=
   (
   -- centered points
-    8 => make_ufixed(0.977023, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    9 => make_ufixed(0.962673, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    10 => make_ufixed(0.939913, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    11 => make_ufixed(0.904651, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    12 => make_ufixed(0.851953, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    13 => make_ufixed(0.777300, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    14 => make_ufixed(0.679179, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    15 => make_ufixed(0.562177, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    0 => make_ufixed(0.437823, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    1 => make_ufixed(0.320821, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    2 => make_ufixed(0.222700, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    3 => make_ufixed(0.148047, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    4 => make_ufixed(0.095349, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    5 => make_ufixed(0.060087, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    6 => make_ufixed(0.037327, lfsr_use_width-lfsr_fraction, lfsr_fraction),
-    7 => make_ufixed(0.022977, lfsr_use_width-lfsr_fraction, lfsr_fraction)
+    --8 => make_ufixed(0.977023, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+    --9 => make_ufixed(0.962673, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+    --10 => make_ufixed(0.939913, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+    --11 => make_ufixed(0.904651, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+    --12 => make_ufixed(0.851953, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+    --13 => make_ufixed(0.777300, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+    --14 => make_ufixed(0.679179, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+    --15 => make_ufixed(0.562177, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+    --0 => make_ufixed(0.437823, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+    --1 => make_ufixed(0.320821, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+    --2 => make_ufixed(0.222700, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+    --3 => make_ufixed(0.148047, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+    --4 => make_ufixed(0.095349, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+    --5 => make_ufixed(0.060087, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+    --6 => make_ufixed(0.037327, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+    --7 => make_ufixed(0.022977, lfsr_use_width-lfsr_fraction, lfsr_fraction)
+
+  -- lookup for -u + log tau
+   8 => make_ufixed(0.000915, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 9 => make_ufixed(0.001508, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	10 => make_ufixed(0.002483, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	11 => make_ufixed(0.004087, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	12 => make_ufixed(0.006721, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	13 => make_ufixed(0.011033, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	14 => make_ufixed(0.018062, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	15 => make_ufixed(0.029434, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 0 => make_ufixed(0.047619, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 1 => make_ufixed(0.076158, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 2 => make_ufixed(0.119652, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 3 => make_ufixed(0.183063, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 4 => make_ufixed(0.269781, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 5 => make_ufixed(0.378544, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 6 => make_ufixed(0.501067, lfsr_use_width-lfsr_fraction, lfsr_fraction),
+	 7 => make_ufixed(0.623462, lfsr_use_width-lfsr_fraction, lfsr_fraction)
+
 
   -- left anchored points
    --8 => make_ufixed(0.982014, lfsr_use_width-lfsr_fraction, lfsr_fraction),
@@ -130,7 +149,8 @@ architecture rtl of activation is
   signal rng_out : lfsr_state_t;
 begin
 
-  x <= log_tau - membrane;
+  --x <= log_tau - membrane;
+  x <= membrane;
 
   ------------------------------------------------------------
   rng: entity work.lfsr(rtl)
