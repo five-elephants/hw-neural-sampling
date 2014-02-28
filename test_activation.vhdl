@@ -53,17 +53,13 @@ begin
   uut: entity work.sampling_network
   generic map (
     num_samplers => num_samplers,
-    num_rngs_per_sampler => num_rngs_per_sampler,
-    tau => tau,
-    threshold => threshold
+    tau => tau
   )
   port map (
     clk => clk,
     reset => reset,
     clock_tick => clock_tick,
     systime => systime,
-    state_clamp_mask => state_clamp_mask,
-    state_clamp => state_clamp,
     state => state,
     membranes => membranes,
     fires => fires,

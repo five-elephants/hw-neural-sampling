@@ -8,11 +8,9 @@ use work.sampling.all;
 
 entity sampler is
   generic (
-    num_rngs : integer := 4;
     num_samplers : integer := 8;
     lfsr_polynomial : lfsr_state_t;
-    tau : integer := 20;
-    threshold : membrane_t
+    tau : positive := 20
   );
 
   port (
@@ -23,7 +21,7 @@ entity sampler is
     state : out std_ulogic;
     membrane : out membrane_t;
     fire : out std_ulogic;
-    seeds : in lfsr_state_array_t(1 to num_rngs)
+    seed : in lfsr_state_t
   );
 end sampler;
 
@@ -33,57 +31,15 @@ architecture rtl of sampler is
   subtype sum_in_t is 
     signed(sum_in_size(num_samplers)-1 downto 0);
 
-  type state_number_array_t is array(1 to num_rngs) of
-      membrane_t;
-
   subtype zeta_t is integer range 0 to tau;
 
-  signal rng : state_number_array_t;
   signal membrane_i : membrane_t;
-  signal rand_off : membrane_t;
   signal zeta : zeta_t;
   signal activate : std_ulogic;
 begin
 
   membrane <= membrane_i;
   
-  --gen_rngs: for rng_i in 1 to num_rngs generate 
-    --signal rand_out : lfsr_state_t;
-  --begin
-
-    --------------------------------------------------------------
-    --rng_inst: entity work.lfsr(rtl)
-    --generic map (
-      --width => lfsr_width
-    --)
-    --port map (
-      --clk => clk,
-      --reset => reset,
-      --seed => seeds(rng_i),
-      --poly => lfsr_polynomial,
-      --rand_out => rand_out
-    --);
-    --------------------------------------------------------------
-
-    --rng(rng_i) <= resize(
-        --signed(rand_out(lfsr_use_width-1 downto 0)), 
-        --rng(rng_i)'length
-    --);
-  --end generate gen_rngs;
-
-  --------------------------------------------------------------
-  --sum_rand_off: process ( rng )
-    --variable acc : membrane_t;
-  --begin
-    --acc := to_signed(0, acc'length);
-    --for i in rng'range loop
-      --acc := acc + rng(i);
-    --end loop;
-
-    --rand_off <= shift_left(acc, membrane_fraction-lfsr_fraction);
-  --end process;
-  --------------------------------------------------------------
-
 
   ------------------------------------------------------------
   membrane_adder: process(clk, reset)
@@ -119,7 +75,7 @@ begin
     reset => reset,
     membrane => membrane_i,
     active => activate,
-    seed => seeds(1)
+    seed => seed
   );
   ------------------------------------------------------------
 
@@ -134,7 +90,6 @@ begin
     elsif rising_edge(clk) then
 
       if phase = evaluate then
-        --over_thresh := membrane_i + rand_off > threshold;
         over_thresh := (activate = '1');
         fire <= '0';
 
@@ -187,9 +142,6 @@ architecture behave of sampler is
   subtype sum_in_t is 
     signed(sum_in_size(num_samplers)-1 downto 0);
 
-  type state_number_array_t is array(1 to num_rngs) of
-      membrane_t;
-
   subtype zeta_t is integer range 0 to tau;
 
   signal membrane_i : membrane_t;
@@ -235,8 +187,8 @@ begin
     if reset = '1' then
       zeta <= 0;
       fire <= '0';
-      seed1 := to_integer(unsigned(seeds(1)));
-      seed2 := to_integer(unsigned(seeds(2)));
+      seed1 := to_integer(unsigned(seed));
+      seed2 := 1;
     elsif rising_edge(clk) then
 
       if phase = evaluate then

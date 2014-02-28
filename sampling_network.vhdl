@@ -9,20 +9,16 @@ use work.sampling.all;
 entity sampling_network is
   generic (
     num_samplers : integer := 1;
-    num_rngs_per_sampler : integer := 4;
-    tau : integer := 20;
-    threshold : membrane_t
+    tau : positive := 20
   );
   port (
     clk, reset : in std_ulogic;
     clock_tick : out std_ulogic;
     systime : out systime_t;
-    state_clamp_mask,
-    state_clamp : in state_array_t(1 to num_samplers);
     state : out state_array_t(1 to num_samplers);
     membranes : out membrane_array_t(1 to num_samplers);
     fires : out std_ulogic_vector(1 to num_samplers);
-    seeds : in lfsr_state_array_t(1 to num_samplers*num_rngs_per_sampler);
+    seeds : in lfsr_state_array_t(1 to num_samplers);
     biases : in weight_array_t(1 to num_samplers);
     weights : in weight_array2_t(1 to num_samplers, 1 to num_samplers)
   );
@@ -74,11 +70,9 @@ begin
 
     sampler: entity work.sampler(rtl)
     generic map (
-      num_rngs => num_rngs_per_sampler,
       num_samplers => num_samplers,
-      tau => tau,
-      threshold => threshold,
-      lfsr_polynomial => lfsr_polynomial
+      lfsr_polynomial => lfsr_polynomial,
+      tau => tau
     )
     port map (
       clk => clk,
@@ -89,7 +83,7 @@ begin
       state => state_i(sampler_i),
       membrane => membranes(sampler_i),
       fire => fires(sampler_i),
-      seeds => seeds((sampler_i-1)*num_rngs_per_sampler+1 to sampler_i*num_rngs_per_sampler)
+      seed => seeds(sampler_i)
     );
 
   end generate gen_samplers;
