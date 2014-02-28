@@ -14,11 +14,13 @@ package sampling is
   constant lfsr_width : integer := 16;
   constant lfsr_use_width : integer := 16;
   constant lfsr_fraction : integer := 16;
+  constant joint_counter_width : positive := 64;
 
   subtype systime_t is unsigned(63 downto 0);
   subtype lfsr_state_t is std_logic_vector(lfsr_width-1 downto 0);
   subtype membrane_t is signed(membrane_width-1 downto 0);
   subtype weight_t is signed(weight_width-1 downto 0);
+  subtype joint_counter_t is unsigned(joint_counter_width-1 downto 0);
 
   type lfsr_state_array_t is array(positive range <>) of
     lfsr_state_t;
@@ -35,6 +37,9 @@ package sampling is
   type state_array_t is array(positive range <>) of
     std_ulogic;
 
+  type state_array2_t is array(positive range <>, positive range <>) of
+    std_ulogic;
+
   type phase_t is (
     idle,
     propagate,
@@ -42,6 +47,8 @@ package sampling is
     evaluate
   );
 
+  type joint_counter_array_t is array(positive range <>) of
+    joint_counter_t;
 
 
   -- 8bit full polynomial

@@ -13,6 +13,7 @@ SOURCE=\
 			 activation.vhdl \
 			 sampler.vhdl \
 			 sampling_network.vhdl \
+			 sampling_shell.vhdl \
 			 test_sampling.vhdl \
 			 test_activation.vhdl
 
