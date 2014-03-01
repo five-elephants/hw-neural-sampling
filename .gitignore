@@ -8,3 +8,9 @@ test_sampling
 test_activation
 *.cf
 .ropeproject
+
+synthesis/.Xil
+synthesis/sampling/sampling.cache/*
+synthesis/sampling/sampling.runs/**/*
+synthesis/planAhead*
+synthesis/sampling/sampling.data/cache

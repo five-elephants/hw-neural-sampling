@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DARoots Version="1" Minor="26">
+  <FileSet Name="sim_1" Type="SimulationSrcs" RelSrcDir="$PSRCDIR/sim_1">
+    <Filter Type="Srcs"/>
+    <File Path="$PPRDIR/../../test_sampling.vhdl">
+      <FileInfo>
+        <Attr Name="UsedInSynthesis" Val="1"/>
+        <Attr Name="UsedInSimulation" Val="1"/>
+      </FileInfo>
+    </File>
+    <File Path="$PPRDIR/../../test_activation.vhdl">
+      <FileInfo>
+        <Attr Name="UsedInSynthesis" Val="1"/>
+        <Attr Name="UsedInSimulation" Val="1"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="DesignMode" Val="RTL"/>
+      <Option Name="TopModule" Val="activation"/>
+      <Option Name="TopLib" Val="work"/>
+      <Option Name="TopArchitecture" Val="behave"/>
+      <Option Name="TopRTLFile" Val="$PPRDIR/../../activation.vhdl"/>
+      <Option Name="TopAutoSet" Val="TRUE"/>
+      <Option Name="SrcSet" Val="sources_1"/>
+      <Option Name="NGOutputHDLFormat" Val="vhdl"/>
+    </Config>
+  </FileSet>
+</DARoots>
