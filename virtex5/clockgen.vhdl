@@ -65,8 +65,8 @@ begin
   
   pll_inst: pll_base
   generic map (
-    clkfbout_mult => 1,
-    clkout0_divide => 1,
+    clkfbout_mult => 6,
+    clkout0_divide => 6,
     clkin_period => 10.0 
   )
   port map (

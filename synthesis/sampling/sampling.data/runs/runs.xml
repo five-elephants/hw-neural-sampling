@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <Runs Version="1" Minor="8">
-	<Run Id="synth_1" Type="Ft3:Synth" SrcSet="sources_1" Part="xc5vlx50tff1136-1" LaunchPart="xc5vlx50tff1136-1" ConstrsSet="constrs_1" Description="PlanAhead Defaults (XST defaults with hierarchy)" State="current" Dir="$PRUNDIR/synth_1" LaunchTime="1393708475">
+	<Run Id="synth_1" Type="Ft3:Synth" SrcSet="sources_1" Part="xc5vlx50tff1136-1" LaunchPart="xc5vlx50tff1136-1" ConstrsSet="constrs_1" Description="PlanAhead Defaults (XST defaults with hierarchy)" State="current" Dir="$PRUNDIR/synth_1" LaunchTime="1393712134">
 		<File Type="XST-NGC" Name="top.ngc"/>
 		<File Type="RUN-STRAT" Name="$PDATADIR/runs/synth_1/synth_1.psg"/>
 		<File Type="XST-SRP" Name="top.srp"/>
@@ -9,7 +9,7 @@
 		<File Type="PA-XSTPRJ" Name="top.prj"/>
 		<File Type="RUN-CONSTRS" Name="$PDATADIR/runs/synth_1/constrs_in.xml"/>
 	</Run>
-	<Run Id="impl_1" Type="Ft2:EntireDesign" SynthRun="synth_1" Part="xc5vlx50tff1136-1" LaunchPart="xc5vlx50tff1136-1" ConstrsSet="constrs_1" Description="ISE Defaults, including packing registers in IOs off" State="current" Dir="$PRUNDIR/impl_1" LaunchTime="1393708502">
+	<Run Id="impl_1" Type="Ft2:EntireDesign" SynthRun="synth_1" Part="xc5vlx50tff1136-1" LaunchPart="xc5vlx50tff1136-1" ConstrsSet="constrs_1" Description="ISE Defaults, including packing registers in IOs off" State="current" Dir="$PRUNDIR/impl_1" LaunchTime="1393712177">
 		<File Type="PA-EDIF" Name="top.edf"/>
 		<File Type="MAP-PSR" Name="top.psr"/>
 		<File Type="PA-UCF" Name="top.ucf"/>

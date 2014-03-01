@@ -42,6 +42,19 @@ architecture rtl of top is
   end component;
 
 
+  component jtag_access is
+    generic (
+      num_samplers : integer;
+      num_observers : natural
+    );
+
+    port (
+      clk, reset : in std_ulogic;
+      joint_counters : in joint_counter_array_t(1 to num_observers);
+      systime : in systime_t
+    ); 
+  end component;
+
   ------------------------------------------------------------
   -- local signals
   ------------------------------------------------------------
@@ -83,5 +96,22 @@ begin
     systime => systime
   );
 
+
+  ------------------------------------------------------------
+  -- JTAG interface
+  ------------------------------------------------------------
+  
+  jtag_inst: jtag_access
+  generic map (
+    num_samplers => num_samplers,
+    num_observers => num_observers
+  )
+  port map (
+    clk => clk,
+    reset => reset,
+    joint_counters => joint_counters,
+    systime => systime
+  );
+  
 
 end rtl;

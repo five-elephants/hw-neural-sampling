@@ -50,6 +50,12 @@
         <Attr Name="UsedInSimulation" Val="1"/>
       </FileInfo>
     </File>
+    <File Path="$PPRDIR/../../virtex5/jtag_access.vhdl">
+      <FileInfo>
+        <Attr Name="UsedInSynthesis" Val="1"/>
+        <Attr Name="UsedInSimulation" Val="1"/>
+      </FileInfo>
+    </File>
     <File Path="$PPRDIR/../../virtex5/clockgen.vhdl">
       <FileInfo>
         <Attr Name="UsedInSynthesis" Val="1"/>
