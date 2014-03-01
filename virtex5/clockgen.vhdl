@@ -39,14 +39,14 @@ begin
   clock_pin_ibufg: ibufg
   port map(
     I => ext_clk,
-    O => clk_from_ibufg
+    O => clock_from_ibufg
   );
 
 
   ------------------------------------------------------------
   -- reset synchronizer
   ------------------------------------------------------------
-  reset_sync: process ( clock_from_ibufg, async_resetb )
+  reset_synchronizer: process ( clock_from_ibufg, async_resetb )
   begin
     if async_resetb = '0' then
       reset <= '1';
@@ -63,14 +63,14 @@ begin
   -- PLL
   ------------------------------------------------------------
   
-  pll_inst: pll
+  pll_inst: pll_base
   generic map (
     clkfbout_mult => 1,
     clkout0_divide => 1,
-    clkin_period => 10 ns
+    clkin_period => 10.0 
   )
   port map (
-    clkin => ext_clk,
+    clkin => clock_from_ibufg,
     rst => reset,
     clkfbout => clkfb,
     clkfbin => clkfb,

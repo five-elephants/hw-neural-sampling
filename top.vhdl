@@ -7,7 +7,7 @@ use work.net_config.all;
 
 entity top is
   port (
-    ext_clk, async_reset : in std_ulogic
+    ext_clk, async_resetb : in std_ulogic
   ); 
 end top;
 
@@ -28,9 +28,9 @@ architecture rtl of top is
 
   component sampling_shell is
     generic (
-      num_samplers : integer := 32;
+      num_samplers : integer := 4;
       tau : positive := 20;
-      num_observers : natural := 1
+      num_observers : natural := 16
     );
 
     port (

@@ -1,0 +1,5 @@
+NET  ext_clk LOC="AH15";  # Bank 4, Vcco=3.3V, No DCI
+NET  async_resetb LOC="E9";    # Bank 20, Vcco=3.3V, DCI using 49.9 ohm resistors
+
+NET ext_clk TNM_NET = "ext_clk";
+TIMESPEC "TS_ext_clk" = PERIOD "ext_clk" 10 ns HIGH 50%;
