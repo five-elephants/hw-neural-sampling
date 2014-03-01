@@ -47,7 +47,7 @@ architecture rtl of top is
   ------------------------------------------------------------
 
   signal clk, reset : std_ulogic;
-  signal observed_joints : state_array2_t(1 to num_observers, 1 to num_samplers);
+  --signal observed_joints : state_array2_t(1 to num_observers, 1 to num_samplers);
   signal joint_counters : joint_counter_array_t(1 to num_observers);
   signal systime : systime_t;
 begin
