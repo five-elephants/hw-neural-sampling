@@ -3,7 +3,7 @@
 <!--The data in this file is primarily intended for consumption by Xilinx tools.
 The structure and the elements are likely to change over the next few releases.
 This means code written to parse this file will need to be revisited each subsequent release.-->
-<application name="pa" timeStamp="Sat Mar  1 23:16:18 2014">
+<application name="pa" timeStamp="Sat Mar  1 23:32:49 2014">
 <section name="Project Information" visible="false">
 <property name="ProjectID" value="8bc4493728a044f6ad7ceaa2a38a87ea" type="ProjectID"/>
 <property name="ProjectIteration" value="1" type="ProjectIteration"/>
@@ -21,10 +21,12 @@ This means code written to parse this file will need to be revisited each subseq
 <property name="CoreView" value="1" type="JavaHandler"/>
 <property name="EditConstraintSets" value="1" type="JavaHandler"/>
 <property name="NewProject" value="1" type="JavaHandler"/>
-<property name="RunImplementation" value="9" type="JavaHandler"/>
-<property name="RunSynthesis" value="32" type="JavaHandler"/>
+<property name="ProjectSettings" value="1" type="JavaHandler"/>
+<property name="RunImplementation" value="14" type="JavaHandler"/>
+<property name="RunSynthesis" value="35" type="JavaHandler"/>
+<property name="ShowHierarchy" value="1" type="JavaHandler"/>
 <property name="ShowView" value="7" type="JavaHandler"/>
-<property name="ViewTaskImplementation" value="1" type="JavaHandler"/>
+<property name="ViewTaskImplementation" value="4" type="JavaHandler"/>
 <property name="ViewTaskSynthesis" value="1" type="JavaHandler"/>
 <property name="ZoomFit" value="1" type="JavaHandler"/>
 <property name="ZoomIn" value="1" type="JavaHandler"/>

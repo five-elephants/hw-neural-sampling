@@ -9,11 +9,11 @@
 	<DefaultPromote Dir="$PROMOTEDIR"/>
 	<Config>
 		<Option Name="Id" Val="45e38f31814447ebb89a28f2cd305dc7"/>
-		<Option Name="Part" Val="xc5vlx50tff1136-1"/>
+		<Option Name="Part" Val="xc5vlx110tff1136-1"/>
 		<Option Name="CompiledLibDir" Val="$PCACHEDIR/compile_simlib"/>
 		<Option Name="TargetLanguage" Val="VHDL"/>
 		<Option Name="TargetSimulator" Val="ISim"/>
-		<Option Name="Board" Val="ml505"/>
+		<Option Name="Board" Val=""/>
 		<Option Name="SourceMgmtMode" Val="All"/>
 		<Option Name="ActiveSimSet" Val="sim_1"/>
 		<Option Name="CxlOverwriteLibs" Val="1"/>

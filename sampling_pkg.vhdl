@@ -14,7 +14,7 @@ package sampling is
   constant lfsr_width : integer := 16;
   constant lfsr_use_width : integer := 16;
   constant lfsr_fraction : integer := 16;
-  constant joint_counter_width : positive := 64;
+  constant joint_counter_width : positive := 16;
 
   subtype systime_t is unsigned(63 downto 0);
   subtype lfsr_state_t is std_logic_vector(lfsr_width-1 downto 0);
