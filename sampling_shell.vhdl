@@ -81,7 +81,30 @@ begin
 
   ------------------------------------------------------------
   gen_observers: for observer_i in 1 to num_observers generate
-    
+    signal observe_state : state_array_t(1 to num_samplers);
+  begin
+    ------------------------------------------------------------
+    process ( observed_joints )
+    begin
+      for i in 1 to num_samplers loop
+        observe_state(i) <= observed_joints(observer_i, i);
+      end loop;
+    end process;
+    ------------------------------------------------------------
+
+    obs: entity work.observer(rtl)
+    generic map (
+      num_samplers => num_samplers,
+      counter_width => joint_counter_width
+    )
+    port map (
+      clk => clk,
+      reset => reset,
+      state => state,
+      observe_state => observe_state,
+      count => joint_counters(observer_i),
+      saturated => open
+    );
   end generate gen_observers;
   ------------------------------------------------------------
 
