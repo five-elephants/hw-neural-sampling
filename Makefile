@@ -7,6 +7,7 @@ RUN_OPTS=
 TOP=test_activation
 SOURCE=\
 			 sampling_pkg.vhdl \
+			 net_config_pkg.vhdl \
 			 lfsr.vhdl \
 			 test_lfsr.vhdl \
 			 input_sum.vhdl \
@@ -15,8 +16,13 @@ SOURCE=\
 			 sampling_network.vhdl \
 			 observer.vhdl \
 			 sampling_shell.vhdl \
+			 clockgen.vhdl \
+			 top.vhdl \
 			 test_sampling.vhdl \
 			 test_activation.vhdl
+
+VIRTEX5_SOURCE=\
+							 virtex5/clockgen.vhdl
 
 all: run
 
