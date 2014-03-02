@@ -2,9 +2,6 @@ from SimpleXMLRPCServer import SimpleXMLRPCServer
 from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
 import sampling_service.synth_server.synth_client as syncl
 
-def hello(to):
-    return  "hello %s!" % (to)
-
 
 class Run_server(object):
     def __init__(self, synth_uri):
@@ -36,7 +33,6 @@ class RequestHandler(SimpleXMLRPCRequestHandler):
 if __name__ == '__main__':
     server = SimpleXMLRPCServer(('localhost', 8000), requestHandler=RequestHandler)
     server.register_introspection_functions()
-    server.register_function(hello)
     server.register_instance(Run_server('http://localhost:8001'))
 
 
